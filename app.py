@@ -1,27 +1,19 @@
-import streamlit as st
-from flask import Flask, request
-from threading import Thread
+from flask import Flask, render_template
+from flask_socketio import SocketIO, emit
 
-# Crear una aplicación Flask para manejar las solicitudes HTTP
 app = Flask(__name__)
+socketio = SocketIO(app)
 
-# Definir la ruta para manejar las solicitudes GET
-@app.route('/esp32', methods=['GET'])
-def esp32_connection():
-    # Cuando se reciba la solicitud GET del ESP32, actualizamos la página de Streamlit
-    return "Conectado al ESP32 correctamente"
+# Ruta principal que muestra una página HTML
+@app.route('/')
+def index():
+    return render_template('index.html')  # Asegúrate de tener este archivo HTML
 
-# Función para ejecutar Flask en un hilo separado
-def run_flask():
-    app.run(host="0.0.0.0", port=5000, debug=False)
+# Evento que escucha cuando el ESP32 se conecta
+@socketio.on('esp_connected')
+def handle_esp_connection(data):
+    print('ESP32 Conectado:', data)
+    emit('server_response', {'message': '¡ESP32 Conectado!'})
 
-# Crear una interfaz en Streamlit
-st.title('Interfaz para ESP32')
-st.write("Esperando conexión desde el ESP32...")
-
-# Usamos un hilo para ejecutar Flask y mantener Streamlit activo
-thread = Thread(target=run_flask)
-thread.start()
-
-# Mostrar un mensaje cuando el ESP32 se haya conectado
-st.write("¡El ESP32 está conectado!")
+if __name__ == '__main__':
+    socketio.run(app, host='0.0.0.0', port=5000)
