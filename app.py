@@ -14,9 +14,13 @@ def conectar():
         return jsonify({"message": "Estado recibido", "estado": estado_actual}), 200
     return jsonify({"error": "Datos no válidos"}), 400
 
+@app.route('/estado', methods=['GET'])
+def obtener_estado():
+    return jsonify({"estado": estado_actual})
+
 @app.route('/')
 def index():
-    return render_template('index.html', estado=estado_actual)
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
