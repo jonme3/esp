@@ -1,23 +1,22 @@
-from flask import Flask, jsonify
-import time
+from flask import Flask, request, jsonify
+from flask_cors import CORS  # Importamos para manejar CORS si es necesario
 
 app = Flask(__name__)
+CORS(app)  # Permitir CORS para que pueda recibir solicitudes desde otras fuentes
 
 @app.route('/')
 def index():
-    return render_template('index.html')  # Asegúrate de que index.html esté en la carpeta correcta
+    return '¡Bienvenido a la página principal!'
 
 @app.route('/conectar', methods=['POST'])
 def conectar():
-    # Verifica si el ESP32 está realmente conectado
-    # Esto es solo un ejemplo, puedes hacer una verificación adicional si tienes alguna forma de hacerlo
-    current_time = time.time()
-    
-    # Simula la verificación de conexión con un tiempo de respuesta
-    if current_time % 2 == 0:  # Justo por ejemplo, responde solo en momentos específicos
-        return jsonify({"status": "success", "message": "Conectado al ESP32"}), 200
-    else:
-        return jsonify({"status": "error", "message": "No hay conexión con el ESP32"}), 404
+    data = request.get_json()  # Obtener los datos enviados desde el ESP32
+    esp_id = data.get('esp_id', 'Desconocido')
+
+    print(f"Conexión recibida desde: {esp_id}")  # Mostrar el ID del ESP32
+
+    # Responder al ESP32 con un mensaje indicando que está conectado
+    return jsonify({"status": "success", "message": f"Conectado a {esp_id}"}), 200
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5000)
