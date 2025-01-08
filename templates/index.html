@@ -8,67 +8,64 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            color: #333;
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
-        .status {
+        .container {
+            text-align: center;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        #status {
             margin-top: 20px;
             padding: 10px;
-            border-radius: 5px;
             font-size: 20px;
-        }
-        .waiting {
-            background-color: #ffcc00;
-            color: #fff;
+            border-radius: 5px;
         }
         .connected {
-            background-color: #28a745;
-            color: #fff;
+            color: green;
+            background-color: #d4edda;
         }
-        .error {
-            background-color: #dc3545;
-            color: #fff;
+        .disconnected {
+            color: red;
+            background-color: #f8d7da;
         }
     </style>
 </head>
 <body>
 
-    <h1>Conexión ESP32</h1>
-    <div class="status waiting" id="status">
-        Esperando conexión...
-    </div>
+<div class="container">
+    <h1>Estado de la Conexión ESP32</h1>
+    <div id="status" class="disconnected">Esperando conexión...</div>
+    <button onclick="checkConnection()">Verificar Conexión</button>
+</div>
 
-    <script>
-        // Esta función hace la solicitud POST al servidor Flask
-        function checkESP32Connection() {
-            fetch('https://esp-907c.onrender.com/conectar', {
-                method: 'POST',
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "success") {
-                    document.getElementById('status').textContent = data.message;
-                    document.getElementById('status').classList.remove('waiting');
-                    document.getElementById('status').classList.add('connected');
-                } else {
-                    document.getElementById('status').textContent = data.message;
-                    document.getElementById('status').classList.remove('waiting');
-                    document.getElementById('status').classList.add('error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('status').textContent = 'Error de conexión';
-                document.getElementById('status').classList.remove('waiting');
-                document.getElementById('status').classList.add('error');
-            });
+<script>
+function checkConnection() {
+    fetch('https://esp-907c.onrender.com/conectar', {  // URL de tu servidor
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ "esp_id": "ESP32_12345" })  // Enviar el ID del ESP32
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            document.getElementById("status").classList.remove('disconnected');
+            document.getElementById("status").classList.add('connected');
+            document.getElementById("status").textContent = data.message;
+        } else {
+            document.getElementById("status").classList.remove('connected');
+            document.getElementById("status").classList.add('disconnected');
+            document.getElementById("status").textContent = data.message;
         }
-
-        // Llama la función para verificar la conexión cuando la página se carga
-        window.onload = function() {
-            checkESP32Connection();
-        };
-    </script>
-
-</body>
-</html>
+    })
+    .catch(error => {
+        document.getElementById("status").classList.remove('connected');
+        document.getElementById("status").classList.add('disc
