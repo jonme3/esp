@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request, render_template
+import os
 
 app = Flask(__name__)
 
@@ -24,4 +25,6 @@ def conectar():
     return jsonify(message="Estado actualizado"), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Obtiene el puerto de la variable de entorno
+    port = int(os.environ.get("PORT", 5000))  # Usa el puerto proporcionado por Render o 5000 por defecto
+    app.run(host="0.0.0.0", port=port, debug=True)  # Asegúrate de que Flask escuche en todas las interfaces (0.0.0.0)
