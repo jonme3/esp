@@ -14,9 +14,10 @@
   <div id="status">Esperando conexión...</div>
 
   <script>
+    // Función que consulta el estado de la conexión del ESP32
     function checkConnection() {
-      fetch('/esp32_connected')
-        .then(response => response.json())
+      fetch('/esp32_connected')  // Ruta donde el servidor devuelve el estado
+        .then(response => response.json())  // Esperar la respuesta en formato JSON
         .then(data => {
           if (data.status === 'Conectado') {
             document.getElementById('status').textContent = 'ESP32 Conectado!';
@@ -31,7 +32,7 @@
         });
     }
 
-    // Hacer la comprobación cada 5 segundos
+    // Llamar a la función cada 5 segundos para comprobar el estado
     setInterval(checkConnection, 5000);
   </script>
 </body>
