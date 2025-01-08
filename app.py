@@ -1,29 +1,22 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
-CORS(app)  # Permite las solicitudes CORS desde cualquier origen
 
-esp32_connected = False
-
-@app.route('/')
-def index():
-    return "¡Bienvenido a la página principal!"
+# Variable global para almacenar el estado de la entrada
+estado_actual = 0
 
 @app.route('/conectar', methods=['POST'])
 def conectar():
-    global esp32_connected
+    global estado_actual
+    data = request.json  # Obtener datos en formato JSON
+    if 'estado' in data:
+        estado_actual = data['estado']
+        return jsonify({"message": "Estado recibido", "estado": estado_actual}), 200
+    return jsonify({"error": "Datos no válidos"}), 400
 
-    # Obtén los datos enviados por el ESP32
-    data = request.get_json()
-
-    if data['status'] == 'success':
-        esp32_connected = True
-        print("ESP32 conectado:", data['message'])
-        return jsonify({"status": "success", "message": "Conectado al ESP32"}), 200
-    else:
-        esp32_connected = False
-        return jsonify({"status": "error", "message": "No hay conexión con el ESP32"}), 404
+@app.route('/')
+def index():
+    return render_template('index.html', estado=estado_actual)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0')
