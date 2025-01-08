@@ -1,11 +1,11 @@
 from flask import Flask, request, jsonify, render_template
-from flask_cors import CORS  # Para permitir las solicitudes CORS desde otro dominio
+from flask_cors import CORS  # Permite solicitudes desde otros dominios
 
 app = Flask(__name__)
 CORS(app)
 
 # Variable global para almacenar el estado de la conexión
-esp_connected = False  # Inicialmente, el ESP32 no está conectado
+esp_connected = False  # Estado inicial (suponemos que está desconectado)
 
 @app.route('/')
 def index():
