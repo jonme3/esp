@@ -1,35 +1,23 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conexión ESP32</title>
-    <script>
-        function checkConnection() {
-            fetch('http://esp-907c.onrender.com/conectar', { method: 'GET' })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === "success") {
-                        document.getElementById("status").innerText = "¡Conectado al ESP32!";
-                        document.getElementById("status").style.color = "green";
-                    } else {
-                        document.getElementById("status").innerText = "Esperando conexión...";
-                        document.getElementById("status").style.color = "red";
-                    }
-                })
-                .catch(error => {
-                    console.error("Error al verificar la conexión:", error);
-                    document.getElementById("status").innerText = "Error al conectar";
-                    document.getElementById("status").style.color = "red";
-                });
+    <title>Estado de la Entrada</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
         }
-
-        // Verificar conexión cada 5 segundos
-        setInterval(checkConnection, 5000);
-    </script>
+        .estado {
+            font-size: 2rem;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-    <h1>Estado de Conexión</h1>
-    <p id="status">Esperando conexión...</p>
+    <h1>Estado Actual de la Entrada Digital</h1>
+    <p class="estado">Estado: {{ estado }}</p>
 </body>
 </html>
