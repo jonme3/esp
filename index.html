@@ -3,23 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Servidor Web - ESP32</title>
-    <script>
-        // Esta función se ejecutará cuando el ESP32 se conecte
-        function detectESP32Connection() {
-            const message = "¡Conectado desde el ESP32!";
-            document.getElementById("status").innerHTML = message;
+    <title>ESP32 Conexión</title>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script type="text/javascript">
+        // Conexión al servidor Flask SocketIO
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        // Recibe la respuesta del servidor (cuando el ESP32 se conecta)
+        socket.on('server_response', function(data) {
+            document.getElementById("status").innerHTML = data.message;
+        });
+
+        // Función para simular la conexión del ESP32 (esto sería hecho por el ESP32)
+        function notifyESP32Connection() {
+            socket.emit('esp_connected', {data: 'ESP32 Conectado'});
         }
     </script>
 </head>
 <body>
-    <h1>Bienvenido al servidor Web</h1>
-    <p id="status">Esperando conexión...</p>
-
-    <script>
-        // Simulación de conexión del ESP32 (esto es solo para mostrar la idea)
-        // En un caso real, el ESP32 hará una solicitud HTTP al servidor
-        setTimeout(detectESP32Connection, 2000); // Llamar a la función después de 2 segundos (simulación)
-    </script>
+    <h1>ESP32 Conexión al servidor</h1>
+    <div id="status">Esperando conexión...</div>
+    <button onclick="notifyESP32Connection()">Simular Conexión ESP32</button>
 </body>
 </html>
