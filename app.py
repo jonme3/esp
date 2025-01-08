@@ -1,8 +1,8 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, request, render_template
 
 app = Flask(__name__)
 
-# Variable de estado para el ESP32 (simula el estado del dispositivo)
+# Variable global para guardar el estado de la conexión del ESP32
 esp32_connected = False
 
 @app.route('/')
@@ -11,15 +11,17 @@ def index():
 
 @app.route('/estado')
 def estado():
-    # Devuelve el estado del ESP32 en formato JSON
+    # Devuelve el estado actual de la conexión del ESP32
     return jsonify(status="Conectado" if esp32_connected else "Desconectado")
 
-# Endpoint para simular que el ESP32 se conecta después de 10 segundos
-@app.route('/conectar')
+@app.route('/conectar', methods=['POST'])
 def conectar():
     global esp32_connected
-    esp32_connected = True
-    return "ESP32 conectado", 200
+    # Recibimos la solicitud del ESP32 y actualizamos el estado de la conexión
+    data = request.get_json()
+    if data and data.get("status") == "Conectado":
+        esp32_connected = True
+    return jsonify(message="Estado actualizado"), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
