@@ -1,28 +1,38 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESP32 Conexión</title>
-    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-    <script type="text/javascript">
-        // Conexión al servidor Flask SocketIO
-        var socket = io.connect('http://' + document.domain + ':' + location.port);
-
-        // Recibe la respuesta del servidor (cuando el ESP32 se conecta)
-        socket.on('server_response', function(data) {
-            document.getElementById("status").innerHTML = data.message;
-        });
-
-        // Función para simular la conexión del ESP32 (esto sería hecho por el ESP32)
-        function notifyESP32Connection() {
-            socket.emit('esp_connected', {data: 'ESP32 Conectado'});
-        }
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conexión ESP32</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    #status { font-size: 24px; color: #333; }
+  </style>
 </head>
 <body>
-    <h1>ESP32 Conexión al servidor</h1>
-    <div id="status">Esperando conexión...</div>
-    <button onclick="notifyESP32Connection()">Simular Conexión ESP32</button>
+  <h1>ESP32 - Estado de Conexión</h1>
+  <div id="status">Esperando conexión...</div>
+
+  <script>
+    function checkConnection() {
+      fetch('/esp32_connected')
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'Conectado') {
+            document.getElementById('status').textContent = 'ESP32 Conectado!';
+            document.getElementById('status').style.color = 'green';
+          } else {
+            document.getElementById('status').textContent = 'Esperando conexión...';
+            document.getElementById('status').style.color = 'red';
+          }
+        })
+        .catch(error => {
+          console.error('Error al obtener la conexión:', error);
+        });
+    }
+
+    // Hacer la comprobación cada 5 segundos
+    setInterval(checkConnection, 5000);
+  </script>
 </body>
 </html>
