@@ -25,6 +25,10 @@
             background-color: #28a745;
             color: #fff;
         }
+        .error {
+            background-color: #dc3545;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -47,11 +51,16 @@
                     document.getElementById('status').classList.remove('waiting');
                     document.getElementById('status').classList.add('connected');
                 } else {
-                    document.getElementById('status').textContent = 'Esperando conexión...';
+                    document.getElementById('status').textContent = data.message;
+                    document.getElementById('status').classList.remove('waiting');
+                    document.getElementById('status').classList.add('error');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
+                document.getElementById('status').textContent = 'Error de conexión';
+                document.getElementById('status').classList.remove('waiting');
+                document.getElementById('status').classList.add('error');
             });
         }
 
