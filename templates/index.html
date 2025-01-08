@@ -56,9 +56,38 @@
 </head>
 <body>
     <h1>Estado Actual de la Seta</h1>
-    <div class="estado-container {% if estado == 1 %}activo{% endif %}">
-        <div class="estado-text">{% if estado == 1 %}ACTIVADA{% else %}DESACTIVADA{% endif %}</div>
+    <div id="estado-container" class="estado-container">
+        <div id="estado-text" class="estado-text">Cargando...</div>
     </div>
     <footer>Desarrollado por tu ESP32 🌐</footer>
+
+    <script>
+        // Función para actualizar el estado dinámicamente
+        function actualizarEstado() {
+            fetch('/estado') // Llama al endpoint Flask para obtener el estado actual
+                .then(response => response.json())
+                .then(data => {
+                    const estado = data.estado;
+                    const container = document.getElementById('estado-container');
+                    const text = document.getElementById('estado-text');
+
+                    // Actualizar la interfaz
+                    if (estado === 1) {
+                        container.classList.add('activo');
+                        text.textContent = "ACTIVADA";
+                    } else {
+                        container.classList.remove('activo');
+                        text.textContent = "DESACTIVADA";
+                    }
+                })
+                .catch(error => console.error("Error al obtener el estado:", error));
+        }
+
+        // Llamar a la función cada 1 segundo
+        setInterval(actualizarEstado, 1000);
+
+        // Llamada inicial
+        actualizarEstado();
+    </script>
 </body>
 </html>
