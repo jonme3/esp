@@ -4,36 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estado de Conexión ESP32</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f8ff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
         }
+
         .container {
-            text-align: center;
-            padding: 30px;
-            background-color: white;
-            border-radius: 10px;
+            background-color: #ffffff;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
         }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
         #status {
-            margin-top: 20px;
-            padding: 10px;
+            padding: 15px;
             font-size: 20px;
-            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 20px;
+            border-radius: 10px;
+            transition: all 0.5s ease-in-out;
         }
+
         .connected {
-            color: green;
-            background-color: #d4edda;
+            color: #28a745;
+            background-color: #eaf9ea;
+            border: 2px solid #28a745;
         }
+
         .disconnected {
-            color: red;
+            color: #dc3545;
             background-color: #f8d7da;
+            border: 2px solid #dc3545;
+        }
+
+        .button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .loading {
+            display: none;
+            font-size: 16px;
+            margin-top: 15px;
+            color: #007bff;
+            font-weight: normal;
+        }
+
+        .loading.show {
+            display: block;
         }
     </style>
 </head>
@@ -42,15 +93,22 @@
 <div class="container">
     <h1>Estado de la Conexión ESP32</h1>
     <div id="status" class="disconnected">Esperando conexión...</div>
-    <button onclick="checkConnection()">Verificar Conexión</button>
+    <button class="button" onclick="checkConnection()">Verificar Conexión</button>
+    <div id="loading" class="loading">Cargando...</div>
 </div>
 
 <script>
 function checkConnection() {
+    // Mostrar el mensaje de carga
+    document.getElementById('loading').classList.add('show');
+    
     // Realiza una solicitud GET al servidor Flask para obtener el estado de la conexión
     fetch('https://esp-907c.onrender.com/estado')  // URL del servidor Flask
     .then(response => response.json())  // Respuesta del servidor
     .then(data => {
+        // Ocultar el mensaje de carga
+        document.getElementById('loading').classList.remove('show');
+
         // Si la respuesta es exitosa, cambia el estado de la página
         if (data.status === "success") {
             document.getElementById("status").classList.remove('disconnected');
@@ -63,6 +121,9 @@ function checkConnection() {
         }
     })
     .catch(error => {
+        // Ocultar el mensaje de carga
+        document.getElementById('loading').classList.remove('show');
+
         // Si hay un error en la solicitud, muestra un mensaje de error
         document.getElementById("status").classList.remove('connected');
         document.getElementById("status").classList.add('disconnected');
