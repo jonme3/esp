@@ -59,4 +59,22 @@ function checkConnection() {
         } else {
             document.getElementById("status").classList.remove('connected');
             document.getElementById("status").classList.add('disconnected');
-            document.getElementById("status").textContent
+            document.getElementById("status").textContent = data.message;
+        }
+    })
+    .catch(error => {
+        // Si hay un error en la solicitud, muestra un mensaje de error
+        document.getElementById("status").classList.remove('connected');
+        document.getElementById("status").classList.add('disconnected');
+        document.getElementById("status").textContent = "Error al verificar la conexión.";
+    });
+}
+
+// Llama a la función al cargar la página para comprobar el estado de la conexión
+window.onload = function() {
+    checkConnection();
+}
+</script>
+
+</body>
+</html>
