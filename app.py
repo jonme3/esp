@@ -1,19 +1,44 @@
-from flask import Flask, render_template
-from flask_socketio import SocketIO, emit
+#include <WiFi.h>
+#include <HTTPClient.h>
 
-app = Flask(__name__)
-socketio = SocketIO(app)
+const char* ssid = "Arteche Mobile";          // Nombre de la red WiFi
+const char* password = "2017@Munguia";        // Contraseña de la red WiFi
 
-# Ruta principal que muestra una página HTML
-@app.route('/')
-def index():
-    return render_template('index.html')  # Asegúrate de tener este archivo HTML
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
 
-# Evento que escucha cuando el ESP32 se conecta
-@socketio.on('esp_connected')
-def handle_esp_connection(data):
-    print('ESP32 Conectado:', data)
-    emit('server_response', {'message': '¡ESP32 Conectado!'})
+  // Conectarse a la red WiFi
+  WiFi.begin(ssid, password);
+  Serial.println("Conectando a WiFi...");
 
-if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5000)
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.print("Conectado a WiFi con IP: ");
+  Serial.println(WiFi.localIP());
+
+  // Realizar una solicitud HTTP GET al servidor en Render
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    http.begin("https://esp-907c.onrender.com/esp32_connected"); // Endpoint correcto
+    int httpCode = http.GET(); // Realizar la solicitud GET
+
+    if (httpCode > 0) {
+      Serial.printf("Código de respuesta: %d\n", httpCode);
+      String payload = http.getString(); // Obtener la respuesta
+      Serial.println(payload);           // Imprimir la respuesta en el monitor serie
+    } else {
+      Serial.println("Error al realizar la solicitud HTTP");
+    }
+
+    http.end();  // Finalizar la conexión HTTP
+  }
+}
+
+void loop() {
+  // Código adicional si lo necesitas
+}
