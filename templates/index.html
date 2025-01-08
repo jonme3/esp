@@ -68,4 +68,11 @@ function checkConnection() {
     })
     .catch(error => {
         document.getElementById("status").classList.remove('connected');
-        document.getElementById("status").classList.add('disc
+        document.getElementById("status").classList.add('disconnected');
+        document.getElementById("status").textContent = "Error al verificar la conexión.";
+    });
+}
+</script>
+
+</body>
+</html>
