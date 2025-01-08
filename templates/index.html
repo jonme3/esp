@@ -3,118 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estado de Conexión ESP32</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        /* Estilo similar al anterior */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+    <title>Conexión ESP32</title>
+    <script>
+        function checkConnection() {
+            fetch('http://esp-907c.onrender.com/conectar', { method: 'GET' })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        document.getElementById("status").innerText = "¡Conectado al ESP32!";
+                        document.getElementById("status").style.color = "green";
+                    } else {
+                        document.getElementById("status").innerText = "Esperando conexión...";
+                        document.getElementById("status").style.color = "red";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error al verificar la conexión:", error);
+                    document.getElementById("status").innerText = "Error al conectar";
+                    document.getElementById("status").style.color = "red";
+                });
         }
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f0f8ff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            background-color: #ffffff;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 15px;
-            width: 90%;
-            max-width: 600px;
-            padding: 30px;
-            text-align: center;
-            transition: all 0.3s ease-in-out;
-        }
-
-        h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        #status {
-            padding: 15px;
-            font-size: 20px;
-            font-weight: bold;
-            margin-top: 20px;
-            border-radius: 10px;
-            transition: all 0.5s ease-in-out;
-        }
-
-        .connected {
-            color: #28a745;
-            background-color: #eaf9ea;
-            border: 2px solid #28a745;
-        }
-
-        .disconnected {
-            color: #dc3545;
-            background-color: #f8d7da;
-            border: 2px solid #dc3545;
-        }
-
-        .loading {
-            display: none;
-            font-size: 16px;
-            margin-top: 15px;
-            color: #007bff;
-            font-weight: normal;
-        }
-
-        .loading.show {
-            display: block;
-        }
-    </style>
+        // Verificar conexión cada 5 segundos
+        setInterval(checkConnection, 5000);
+    </script>
 </head>
 <body>
-
-<div class="container">
-    <h1>Estado de la Conexión ESP32</h1>
-    <div id="status" class="disconnected">Esperando conexión...</div>
-    <div id="loading" class="loading">Cargando...</div>
-</div>
-
-<script>
-function checkConnection() {
-    document.getElementById('loading').classList.add('show'); // Mostrar "Cargando..."
-
-    // Realizar la solicitud GET al servidor Flask
-    fetch('/estado')  // El endpoint en Flask
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById('loading').classList.remove('show'); // Ocultar "Cargando..."
-        if (data.status === "success") {
-            document.getElementById("status").classList.remove('disconnected');
-            document.getElementById("status").classList.add('connected');
-            document.getElementById("status").textContent = data.message;
-        } else {
-            document.getElementById("status").classList.remove('connected');
-            document.getElementById("status").classList.add('disconnected');
-            document.getElementById("status").textContent = data.message;
-        }
-    })
-    .catch(error => {
-        document.getElementById('loading').classList.remove('show');
-        document.getElementById("status").classList.remove('connected');
-        document.getElementById("status").classList.add('disconnected');
-        document.getElementById("status").textContent = "Error al verificar la conexión.";
-    });
-}
-
-// Llama a la función al cargar la página y cada 5 segundos para comprobar el estado
-window.onload = function() {
-    checkConnection();
-    setInterval(checkConnection, 5000);  // Verificar la conexión cada 5 segundos
-}
-</script>
-
+    <h1>Estado de Conexión</h1>
+    <p id="status">Esperando conexión...</p>
 </body>
 </html>
