@@ -47,15 +47,17 @@
 
 <script>
 function checkConnection() {
-    fetch('https://esp-907c.onrender.com/conectar', {  // URL de tu servidor
+    // Realiza una petición POST a tu servidor Flask
+    fetch('https://esp-907c.onrender.com/conectar', {  // URL del servidor Flask
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ "esp_id": "ESP32_12345" })  // Enviar el ID del ESP32
+        body: JSON.stringify({ "esp_id": "ESP32_12345" })  // El ID del dispositivo ESP32
     })
-    .then(response => response.json())
+    .then(response => response.json())  // Respuesta del servidor
     .then(data => {
+        // Si la respuesta es exitosa, cambia el estado de la página
         if (data.status === "success") {
             document.getElementById("status").classList.remove('disconnected');
             document.getElementById("status").classList.add('connected');
@@ -67,10 +69,16 @@ function checkConnection() {
         }
     })
     .catch(error => {
+        // Si hay un error en la solicitud, muestra un mensaje de error
         document.getElementById("status").classList.remove('connected');
         document.getElementById("status").classList.add('disconnected');
         document.getElementById("status").textContent = "Error al verificar la conexión.";
     });
+}
+
+// Llama a la función al cargar la página para comprobar el estado de la conexión
+window.onload = function() {
+    checkConnection();
 }
 </script>
 
