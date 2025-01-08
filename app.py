@@ -17,13 +17,14 @@ def estado():
 
 @app.route('/conectar', methods=['POST'])
 def conectar():
-    global esp32_connected
-    # Recibimos la solicitud del ESP32 y actualizamos el estado de la conexión
     data = request.get_json()
     if data and data.get("status") == "Conectado":
         esp32_connected = True
-    return jsonify(message="Estado actualizado"), 200
-
+        print("ESP32 está conectado.")
+        return jsonify(message="Conectado", status="success"), 200
+    else:
+        return jsonify(message="No conectado", status="fail"), 400
+        
 if __name__ == '__main__':
     # Obtiene el puerto de la variable de entorno
     port = int(os.environ.get("PORT", 5000))  # Usa el puerto proporcionado por Render o 5000 por defecto
