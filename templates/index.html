@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conexión ESP32</title>
+    <title>Estado de Conexión ESP32</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -47,13 +47,13 @@
 
 <script>
 function checkConnection() {
-    // Realiza una petición POST a tu servidor Flask
+    // Realiza una solicitud POST al servidor Flask
     fetch('https://esp-907c.onrender.com/conectar', {  // URL del servidor Flask
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ "esp_id": "ESP32_12345" })  // El ID del dispositivo ESP32
+        body: JSON.stringify({ "esp_id": "ESP32_12345" })  // ID del dispositivo ESP32
     })
     .then(response => response.json())  // Respuesta del servidor
     .then(data => {
