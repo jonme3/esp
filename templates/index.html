@@ -66,6 +66,8 @@
             color: #fff;
             text-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
             animation: textAnim 2s ease-in-out infinite;
+            text-align: center;
+            padding: 10px;
         }
 
         @keyframes textAnim {
@@ -123,19 +125,17 @@
     <script>
         // Lista de mensajes cuando todo está bien
         const mensajesBien = [
-            "Estoy vigilando...",
-            "Todo tranquilo por aquí...",
-            "No te menees...",
-            "Todo va bien, no te preocupes...",
-            "Todo bajo control...",
-            "Sin novedades...",
-            "Todo en orden, relájate...",
-            "¡Ojo! Pero todo está bien...",
-            "Te tengo en la mira...",
-            "Todo está en su sitio...",
-            "Está todo controlao...",
-            "Tu verás lo que haces...",
-            "Eso es casi compliance...",
+            "Estoy vigilando",
+            "Todo tranquilo por aquí",
+            "No te menees",
+            "Todo va bien, no te preocupes",
+            "Todo bajo control",
+            "Sin novedades",
+            "Todo en orden, relájate",
+            "¡Ojo! Pero todo está bien",
+            "Te tengo en la mira",
+            "Todo está en su sitio",
+            "Eso es casi compliance"
         ];
 
         // Función para obtener un mensaje aleatorio
@@ -165,9 +165,9 @@
                         alarm.play(); // Comienza la alarma
                     } else {
                         container.classList.remove('activo');
-                        text.textContent = "Todo va bien";
-                        message.textContent = obtenerMensaje();  // Mensaje aleatorio
-                        message.style.opacity = 1;
+                        text.textContent = obtenerMensaje();  // Mensaje aleatorio dentro del contenedor
+                        message.textContent = "";  // Vacía el mensaje de alerta
+                        message.style.opacity = 0;
                         alarm.style.display = "none"; // Oculta la alarma
                         alarm.pause(); // Detiene la alarma
                         alarm.currentTime = 0; // Reinicia la alarma al principio
