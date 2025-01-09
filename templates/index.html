@@ -1,84 +1,148 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compliance Monitor</title>
     <style>
+        /* Estilos globales */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: #f4f4f9;
+            background: linear-gradient(135deg, #ff6a00, #ee0979); /* Fondo gradiente */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
+            overflow: hidden;
+            color: #fff;
         }
 
         h1 {
-            color: #333;
-            margin-bottom: 20px;
+            font-size: 3rem;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 40px rgba(255, 255, 255, 0.3);
+            animation: textGlow 1.5s infinite alternate;
         }
 
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 30px rgba(255, 255, 255, 0.3); }
+            100% { text-shadow: 0 0 30px rgba(255, 255, 255, 1), 0 0 50px rgba(255, 255, 255, 0.6); }
+        }
+
+        /* Contenedor del estado */
         .estado-container {
             position: relative;
-            width: 200px;
-            height: 200px;
-            background: #ccc;
+            width: 250px;
+            height: 250px;
+            background: #333;
             border-radius: 50%;
-            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2), 0 10px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5), 0 10px 20px rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.3s ease, box-shadow 0.3s ease;
+            transition: background 0.5s ease, box-shadow 0.5s ease;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite ease-in-out; /* Animación de pulso */
+        }
+
+        /* Animación de pulso */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
 
         .estado-container.activo {
             background: red;
-            box-shadow: inset 0 0 15px rgba(255, 0, 0, 0.5), 0 10px 20px rgba(255, 0, 0, 0.7);
+            box-shadow: inset 0 0 25px rgba(255, 0, 0, 0.5), 0 10px 20px rgba(255, 0, 0, 0.7);
         }
 
+        /* Estilo del texto dentro del estado */
         .estado-text {
-            font-size: 1.5rem;
-            color: #fff;
-            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            font-size: 1.8rem;
             font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+            animation: textAnim 2s ease-in-out infinite;
         }
 
-        footer {
-            margin-top: 20px;
-            color: #888;
-            font-size: 0.9rem;
+        @keyframes textAnim {
+            0% { opacity: 0.8; transform: translateY(-10px); }
+            50% { opacity: 1; transform: translateY(0px); }
+            100% { opacity: 0.8; transform: translateY(10px); }
         }
 
-        /* Estilos para el mensaje dramático */
+        /* Estilo del mensaje de alerta */
         #message {
             font-size: 2rem;
             color: #ff4040;
-            margin-top: 20px;
             font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+            opacity: 0;
+            animation: fadeInMessage 2s ease-in-out forwards;
+        }
+
+        /* Animación para el mensaje */
+        @keyframes fadeInMessage {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
         }
 
         /* Estilo para la alarma */
         .alarm-sound {
             display: none;
         }
+
+        /* Pie de página */
+        footer {
+            color: #ddd;
+            font-size: 0.9rem;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        /* Botón de recarga o acción */
+        .reload-btn {
+            padding: 15px 30px;
+            background-color: #ee0979;
+            border: none;
+            font-size: 1.2rem;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .reload-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+        }
+
     </style>
 </head>
 <body>
     <h1>Compliance Monitor</h1>
+
+    <!-- Contenedor del estado -->
     <div id="estado-container" class="estado-container">
         <div id="estado-text" class="estado-text">Cargando...</div>
     </div>
 
     <div id="message"></div>
-    
-    <!-- Agregar un sonido para la alarma -->
+
+    <!-- Sonido de alarma -->
     <audio id="alarm" class="alarm-sound" src="{{ url_for('static', filename='beep-07.mp3') }}" loop></audio>
 
     <footer>Desarrollado por sustainability 🌐</footer>
+
+    <!-- Botón para recargar o realizar acción -->
+    <button class="reload-btn" onclick="location.reload()">Recargar Estado</button>
 
     <script>
         // Función para actualizar el estado dinámicamente
@@ -97,12 +161,14 @@
                         container.classList.add('activo');
                         text.textContent = "COMPLIANCE!";
                         message.textContent = "¡ALERTA!";
+                        message.style.opacity = 1;
                         alarm.style.display = "block";  // Muestra la alarma
                         alarm.play(); // Comienza la alarma
                     } else {
                         container.classList.remove('activo');
                         text.textContent = "Todo va bien";
                         message.textContent = "";  // No hay alerta
+                        message.style.opacity = 0;
                         alarm.style.display = "none"; // Oculta la alarma
                         alarm.pause(); // Detiene la alarma
                         alarm.currentTime = 0; // Reinicia la alarma al principio
@@ -112,7 +178,7 @@
         }
 
         // Llamar a la función cada 1 segundo
-        setInterval(actualizarEstado, 100);
+        setInterval(actualizarEstado, 1000);
 
         // Llamada inicial
         actualizarEstado();
