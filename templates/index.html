@@ -10,14 +10,13 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #00c6ff, #0072ff); /* Fondo gradiente suave */
+            background-color: white; /* Fondo blanco */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            overflow: hidden;
-            color: #fff;
+            color: #333;
         }
 
         h1 {
@@ -122,6 +121,29 @@
     <footer>Desarrollado por sustainability 🌐</footer>
 
     <script>
+        // Lista de mensajes cuando todo está bien
+        const mensajesBien = [
+            "Estoy vigilando...",
+            "Todo tranquilo por aquí...",
+            "No te menees...",
+            "Todo va bien, no te preocupes...",
+            "Todo bajo control...",
+            "Sin novedades...",
+            "Todo en orden, relájate...",
+            "¡Ojo! Pero todo está bien...",
+            "Te tengo en la mira...",
+            "Todo está en su sitio...",
+            "Está todo controlao...",
+            "Tu verás lo que haces...",
+            "Eso es casi compliance...",
+        ];
+
+        // Función para obtener un mensaje aleatorio
+        function obtenerMensaje() {
+            const index = Math.floor(Math.random() * mensajesBien.length);
+            return mensajesBien[index];
+        }
+
         // Función para actualizar el estado dinámicamente
         function actualizarEstado() {
             fetch('/estado') // Llama al endpoint Flask para obtener el estado actual
@@ -144,8 +166,8 @@
                     } else {
                         container.classList.remove('activo');
                         text.textContent = "Todo va bien";
-                        message.textContent = "";  // No hay alerta
-                        message.style.opacity = 0;
+                        message.textContent = obtenerMensaje();  // Mensaje aleatorio
+                        message.style.opacity = 1;
                         alarm.style.display = "none"; // Oculta la alarma
                         alarm.pause(); // Detiene la alarma
                         alarm.currentTime = 0; // Reinicia la alarma al principio
