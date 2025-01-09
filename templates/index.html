@@ -76,7 +76,7 @@
     <div id="message"></div>
     
     <!-- Agregar un sonido para la alarma -->
-    <audio id="alarm" class="alarm-sound" src="{{ url_for('static', filename='beep-07.mp3') }}" autoplay loop></audio>
+    <audio id="alarm" class="alarm-sound" src="{{ url_for('static', filename='beep-07.mp3') }}" loop></audio>
 
     <footer>Desarrollado por sustainability 🌐</footer>
 
@@ -98,11 +98,14 @@
                         text.textContent = "COMPLIANCE!";
                         message.textContent = "¡ALERTA!";
                         alarm.style.display = "block";  // Muestra la alarma
+                        alarm.play(); // Comienza la alarma
                     } else {
                         container.classList.remove('activo');
                         text.textContent = "Todo va bien";
                         message.textContent = "";  // No hay alerta
                         alarm.style.display = "none"; // Oculta la alarma
+                        alarm.pause(); // Detiene la alarma
+                        alarm.currentTime = 0; // Reinicia la alarma al principio
                     }
                 })
                 .catch(error => console.error("Error al obtener el estado:", error));
