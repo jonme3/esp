@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estado de la Entrada Digital</title>
+    <title>Compliance Monitor</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,7 +68,7 @@
     </style>
 </head>
 <body>
-    <h1>Estado Actual de la Seta</h1>
+    <h1> </h1>
     <div id="estado-container" class="estado-container">
         <div id="estado-text" class="estado-text">Cargando...</div>
     </div>
@@ -96,11 +96,11 @@
                     if (estado === 1) {
                         container.classList.add('activo');
                         text.textContent = "COMPLIANCE!";
-                        message.textContent = "¡ALERTA! Cumplimiento activado.";
+                        message.textContent = "¡ALERTA!";
                         alarm.style.display = "block";  // Muestra la alarma
                     } else {
                         container.classList.remove('activo');
-                        text.textContent = "Todo bien";
+                        text.textContent = "Todo va bien";
                         message.textContent = "";  // No hay alerta
                         alarm.style.display = "none"; // Oculta la alarma
                     }
