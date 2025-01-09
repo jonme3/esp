@@ -52,6 +52,19 @@
             color: #888;
             font-size: 0.9rem;
         }
+
+        /* Estilos para el mensaje dramático */
+        #message {
+            font-size: 2rem;
+            color: #ff4040;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        /* Estilo para la alarma */
+        .alarm-sound {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -59,6 +72,12 @@
     <div id="estado-container" class="estado-container">
         <div id="estado-text" class="estado-text">Cargando...</div>
     </div>
+
+    <div id="message"></div>
+    
+    <!-- Agregar un sonido para la alarma -->
+    <audio id="alarm" class="alarm-sound" src="https://www.soundjay.com/button/beep-07.wav" autoplay loop></audio>
+
     <footer>Desarrollado por tu ESP32 🌐</footer>
 
     <script>
@@ -70,14 +89,20 @@
                     const estado = data.estado;
                     const container = document.getElementById('estado-container');
                     const text = document.getElementById('estado-text');
+                    const message = document.getElementById('message');
+                    const alarm = document.getElementById('alarm');
 
                     // Actualizar la interfaz
                     if (estado === 1) {
                         container.classList.add('activo');
-                        text.textContent = "ACTIVADA";
+                        text.textContent = "COMPLIANCE!";
+                        message.textContent = "¡ALERTA! Cumplimiento activado.";
+                        alarm.style.display = "block";  // Muestra la alarma
                     } else {
                         container.classList.remove('activo');
-                        text.textContent = "DESACTIVADA";
+                        text.textContent = "Todo bien";
+                        message.textContent = "";  // No hay alerta
+                        alarm.style.display = "none"; // Oculta la alarma
                     }
                 })
                 .catch(error => console.error("Error al obtener el estado:", error));
